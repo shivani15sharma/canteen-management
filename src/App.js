@@ -1,23 +1,31 @@
-import logo from './logo.svg';
+import React, {lazy, Suspense} from 'react';
+import {Provider} from 'react-redux';
+import thunk from 'redux-thunk';
+import {applyMiddleware, createStore} from 'redux';
+import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
+import reducers from './reducers/index';
 import './App.css';
+
+const Admin = lazy(() => import('./admin/Admin'));
+
+const middleware = applyMiddleware(thunk);
+export const store = createStore(reducers, middleware);
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <div className='App-header'>
+        CANTEEN MANAGEMENT SYSTEM
+      </div>
+      <Provider store={store}>
+        <Router>
+          <Suspense fallback={<div />}>
+            <Switch>
+              <Route path='/admin' component={Admin} />
+            </Switch>
+          </Suspense>
+        </Router>
+      </Provider>
     </div>
   );
 }
